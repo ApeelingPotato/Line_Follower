@@ -1,0 +1,65 @@
+#include <Arduino.h>
+#include <Wire.h>
+#include <SoftwareSerial.h>
+
+#include <MeMCore.h>
+
+MeDCMotor motor_9(9);
+MeDCMotor motor_10(10);
+void move(int direction, int speed)
+{
+      int leftSpeed = 0;
+      int rightSpeed = 0;
+      if(direction == 1){
+        	leftSpeed = speed;
+        	rightSpeed = speed;
+      }else if(direction == 2){
+        	leftSpeed = -speed;
+        	rightSpeed = -speed;
+      }else if(direction == 3){
+        	leftSpeed = -speed;
+        	rightSpeed = speed;
+      }else if(direction == 4){
+        	leftSpeed = speed;
+        	rightSpeed = -speed;
+      }
+      motor_9.run((9)==M1?-(leftSpeed):(leftSpeed));
+      motor_10.run((10)==M1?-(rightSpeed):(rightSpeed));
+}
+double angle_rad = PI/180.0;
+double angle_deg = 180.0/PI;
+double __var__83_101_110_115_111_114_32_83_116_97_116_101;
+MeLineFollower linefollower_2(2);
+
+void setup(){
+    pinMode(A7,INPUT);
+    while(!((0^(analogRead(A7)>10?0:1))))
+    {
+        _loop();
+    }
+}
+
+void loop(){
+    __var__83_101_110_115_111_114_32_83_116_97_116_101 = linefollower_2.readSensors();
+    if(((__var__83_101_110_115_111_114_32_83_116_97_116_101)==(Right))){
+        motor_9.run((9)==M1?-(0):(0));
+        motor_10.run((10)==M1?-(50):(50));
+    }else{
+        if(((__var__83_101_110_115_111_114_32_83_116_97_116_101)==(Left))){
+            motor_9.run((9)==M1?-(50):(50));
+            motor_10.run((10)==M1?-(0):(0));
+        }else{
+            motor_9.run((9)==M1?-(50):(50));
+            motor_10.run((10)==M1?-(50):(50));
+        }
+    }
+    _loop();
+}
+
+void _delay(float seconds){
+    long endTime = millis() + seconds * 1000;
+    while(millis() < endTime)_loop();
+}
+
+void _loop(){
+}
